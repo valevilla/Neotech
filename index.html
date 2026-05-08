@@ -3,71 +3,450 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevQuest Arcade | Aprende HTML & CSS</title>
-    <link rel="stylesheet" href="styles.css">
-    <!-- Google Fonts para estilo Arcade y Moderno -->
+    <title>WebDev Quest - Arcade Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Colores de la Cabina de Mando (Estilo Neón Profundo) */
+            --bg-color: #1a1a2e; /* Azul medianoche */
+            --panel-bg: #16213e; /* Azul oscuro panel */
+            --panel-border: rgba(233, 69, 96, 0.2); /* Borde neón sutil */
+            --neon-accent: #e94560; /* Magenta neón */
+            --editor-bg: #0f1423; /* Negro azulado editor */
+            --text-main: #fff;
+            --text-muted: #c7e2f5;
+            --text-editor: #dcdcdc;
+            --progress-fill: linear-gradient(90deg, #4ef037, #37f0b5);
+
+            /* Tipografía */
+            --font-main: 'Outfit', sans-serif;
+            --font-arcade: 'Press Start 2P', cursive;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: start;
+            min-height: 100vh;
+        }
+
+        .game-wrapper {
+            max-width: 800px;
+            width: 100%;
+            display: grid;
+            gap: 15px;
+            padding-bottom: 20px;
+        }
+
+        /* --- Panel de Perfil --- */
+        .panel-profile {
+            background: var(--panel-bg);
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid var(--panel-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .profile-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--neon-accent);
+        }
+
+        .player-stats h1 {
+            font-size: 1.1rem;
+            margin: 0 0 4px 0;
+            color: var(--text-main);
+        }
+
+        .level-badge {
+            font-family: var(--font-arcade);
+            font-size: 0.6rem;
+            color: var(--neon-accent);
+            letter-spacing: 1px;
+        }
+
+        .pts-container {
+            font-family: var(--font-arcade);
+            background: #2d3436; /* Color oscuro neutral */
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: right;
+            min-width: 100px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .pts-label {
+            font-size: 0.5rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .pts-value {
+            font-size: 1.1rem;
+            color: #39ff14; /* Verde matriz */
+            text-shadow: 0 0 5px #39ff14;
+        }
+
+        /* --- Panel de Misión --- */
+        .panel-mission {
+            background: var(--panel-bg);
+            padding: 18px;
+            border-radius: 12px;
+            border: 2px solid var(--panel-border);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .panel-mission h2 {
+            font-size: 1.2rem;
+            color: var(--neon-accent);
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+
+        .panel-mission p {
+            color: var(--text-muted);
+            line-height: 1.5;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .mission-goal {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            border-left: 3px solid var(--neon-accent);
+        }
+
+        .progress-bar {
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .progress-track {
+            background: #111;
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: var(--progress-fill);
+            height: 100%;
+            width: 10%; /* Inicia en 10% */
+            transition: width 0.3s ease-out;
+            box-shadow: 0 0 10px #4ef037;
+        }
+
+        /* --- Área de Juego y Código --- */
+        .game-main {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Panel Editor */
+        .panel-editor, .panel-preview {
+            background: var(--panel-bg);
+            padding: 10px;
+            border-radius: 12px;
+            border: 2px solid rgba(255,255,255,0.1); /* Borde diferente */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .tab-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .tab-title {
+            font-size: 0.75rem;
+            font-family: var(--font-arcade);
+            color: var(--text-muted);
+        }
+
+        #code-editor {
+            width: 100%;
+            height: 250px;
+            background: var(--editor-bg);
+            border-radius: 8px;
+            border: none;
+            padding: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            color: var(--text-editor);
+            resize: none;
+            outline: none;
+            box-sizing: border-box; /* Crucial para padding */
+        }
+
+        /* --- Botones --- */
+        .btn-game {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: none;
+            font-family: var(--font-arcade);
+            font-size: 0.8rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.5);
+            margin-top: 10px;
+        }
+
+        .btn-game:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.5);
+        }
+
+        #run-btn {
+            background-color: #00bcd4; /* Cian neón */
+            color: white;
+        }
+
+        #next-lvl-btn {
+            background-color: #7f8c8d; /* Gris deshabilitado por defecto */
+            color: #b2bec3;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        #next-lvl-btn.active {
+            background-color: var(--neon-accent);
+            color: white;
+            cursor: pointer;
+            opacity: 1;
+            box-shadow: 0 4px 0 #922b3e; /* Sombra oscura */
+            text-shadow: 0 0 5px white;
+        }
+
+        /* --- Vista Previa --- */
+        .preview-content {
+            border: 4px solid #2d3436; /* Color marco neutral */
+            border-radius: 8px;
+            overflow: hidden;
+            height: 250px; /* Misma altura que el editor */
+        }
+
+        #preview-window {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white; /* Resultado sobre fondo blanco */
+        }
+
+        /* --- Queries para Desktop --- */
+        @media (min-width: 768px) {
+            .game-wrapper {
+                max-width: 900px;
+            }
+            .game-main {
+                display: grid;
+                grid-template-columns: 1fr 1fr; /* Dos columnas */
+                gap: 20px;
+            }
+            .panel-profile, .panel-mission {
+                grid-column: span 2; /* Ocupan todo el ancho arriba */
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <div class="arcade-container">
-        <!-- Header: Stats del Jugador -->
-        <header class="game-header">
-            <div class="player-info">
-                <span class="avatar">🐱</span>
-                <div>
-                    <h1 id="player-name">Player 1</h1>
+    <div class="game-wrapper">
+
+        <header class="panel-profile">
+            <div class="profile-info">
+                <img src="https://via.placeholder.com/50x50/39ff14/000000?text=🐱" alt="Avatar Player">
+                <div class="player-stats">
+                    <h1>Player 1</h1>
                     <div class="level-badge">NIVEL <span id="current-level-num">1</span></div>
                 </div>
             </div>
-            <div class="stats">
-                <div class="stat-box">
-                    <span class="label">PUNTOS</span>
-                    <span id="xp-points" class="value">0</span>
-                </div>
+            <div class="pts-container">
+                <div class="pts-label">PUNTOS</div>
+                <div class="pts-value" id="xp-points">0</div>
             </div>
         </header>
 
-        <main class="game-layout">
-            <!-- Columna Izquierda: Teoría y Misiones -->
-            <section class="mission-control">
-                <div class="card mission-card">
-                    <h2>Misión Actual</h2>
-                    <div id="theory-text" class="theory-bubble">
-                        <!-- Se carga mediante JS -->
-                    </div>
+        <section class="panel-mission">
+            <h2>Misión Actual</h2>
+            <div id="theory-text">
+                <p>¡Bienvenido, Recluta! Todo gran sitio web comienza con un título. Escribe una etiqueta <span class="mission-goal">h1</span> con el texto "Hola Mundo" para empezar.</p>
+            </div>
+            <div class="progress-bar">
+                <span>Progreso</span>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progress-fill"></div>
                 </div>
-                <div class="progress-container">
-                    <span>Progreso del Nivel</span>
-                    <div class="progress-bar">
-                        <div id="progress-fill" class="fill"></div>
-                    </div>
+            </div>
+        </section>
+
+        <main class="game-main">
+
+            <section class="panel-editor">
+                <div class="tab-header">
+                    <span class="tab-title">index.html</span>
                 </div>
+                <textarea id="code-editor" spellcheck="false" placeholder="Escribe tu código HTML aquí..."></textarea>
+                <button class="btn-game" id="run-btn">EJECUTAR CÓDIGO ⚡</button>
             </section>
 
-            <!-- Columna Central: Editor de Código -->
-            <section class="editor-container">
-                <div class="card editor-card">
-                    <div class="tab-header">
-                        <span class="tab active">index.html</span>
-                    </div>
-                    <textarea id="code-editor" spellcheck="false" placeholder="Escribe tu código aquí..."></textarea>
+            <section class="panel-preview">
+                <div class="tab-header">
+                    <span class="tab-title">vista previa</span>
                 </div>
-                <button id="run-btn" class="arcade-btn">EJECUTAR CÓDIGO ⚡</button>
+                <div class="preview-content">
+                    <iframe id="preview-window"></iframe>
+                </div>
+                <button class="btn-game" id="next-lvl-btn" disabled>SIGUIENTE NIVEL 🏆</button>
             </section>
 
-            <!-- Columna Derecha: Vista Previa -->
-            <section class="preview-container">
-                <div class="card preview-card">
-                    <div class="screen-frame">
-                        <iframe id="preview-window"></iframe>
-                    </div>
-                </div>
-                <button id="next-lvl-btn" class="arcade-btn next-btn" disabled>SIGUIENTE NIVEL 🏆</button>
-            </section>
         </main>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Configuración de los Niveles y Retos
+        const levels = [
+            {
+                id: 1,
+                points: 100,
+                theory: "¡Bienvenido, Recluta! Todo gran sitio web comienza con un título. Escribe una etiqueta <span class='mission-goal'><h1>Hola Mundo</h1></span> para empezar.",
+                targetHtml: "<h1>Hola Mundo</h1>", // El código exacto o similar que buscamos
+                successMessage: "¡Nivel 1 Completado! +100 PTS."
+            },
+            {
+                id: 2,
+                points: 200,
+                theory: "¡Excelente! Ahora necesitamos un párrafo para el contenido. Escribe una etiqueta <span class='mission-goal'><p>Este es mi primer sitio.</p></span> debajo de tu título.",
+                targetHtml: "<p>Este es mi primer sitio.</p>",
+                successMessage: "¡Nivel 2 Completado! +200 PTS."
+            },
+            {
+                id: 3,
+                points: 300,
+                theory: "¡Increíble! Ahora vamos a darle estilo. Agrega color rojo al título agregando <span class='mission-goal'><style>h1 { color: red; }</style></span> en tu código.",
+                targetHtml: "color: red",
+                successMessage: "¡Nivel 3 Completado! +300 PTS. Eres un Maestro HTML."
+            }
+        ];
+
+        // Estado del Juego
+        let currentLevelIndex = 0;
+        let totalPoints = 0;
+        let isLevelCompleted = false;
+
+        // Referencias a elementos del DOM
+        const levelNumSpan = document.getElementById('current-level-num');
+        const xpPointsSpan = document.getElementById('xp-points');
+        const theoryTextDiv = document.getElementById('theory-text');
+        const progressFillDiv = document.getElementById('progress-fill');
+        const codeEditor = document.getElementById('code-editor');
+        const runBtn = document.getElementById('run-btn');
+        const nextLvlBtn = document.getElementById('next-lvl-btn');
+        const previewIframe = document.getElementById('preview-window');
+
+        // Función para inicializar/actualizar la interfaz del nivel
+        function loadLevel(index) {
+            const level = levels[index];
+            levelNumSpan.innerText = level.id;
+            theoryTextDiv.innerHTML = `<p>${level.theory}</p>`;
+            
+            // Actualizar barra de progreso (por ejemplo, 10% por nivel)
+            const progress = ((index + 1) / levels.length) * 100;
+            progressFillDiv.style.width = `${progress}%`;
+            
+            // Reiniciar estado del editor y botones
+            codeEditor.value = "";
+            previewIframe.contentWindow.document.body.innerHTML = ""; // Limpiar vista previa
+            isLevelCompleted = false;
+            nextLvlBtn.disabled = true;
+            nextLvlBtn.classList.remove('active');
+        }
+
+        // --- Lógica Funcional: Ejecutar y Validar ---
+
+        runBtn.addEventListener('click', () => {
+            const userCode = codeEditor.value;
+            const level = levels[currentLevelIndex];
+
+            // 1. Mostrar la vista previa
+            const previewDoc = previewIframe.contentWindow.document;
+            previewDoc.open();
+            // Inyectamos el código del usuario como HTML puro
+            previewDoc.write(userCode);
+            previewDoc.close();
+
+            // 2. Validar el código (Check simple de contenido)
+            // Esto es una validación básica. Para un nivel profesional,
+            // usarías parsing de HTML/CSS para validar la estructura del DOM.
+            const validationTarget = level.targetHtml.toLowerCase().replace(/\s+/g, '');
+            const normalizedUserCode = userCode.toLowerCase().replace(/\s+/g, '');
+
+            // Si el código del usuario *contiene* el código objetivo
+            if (normalizedUserCode.includes(validationTarget) && !isLevelCompleted) {
+                // Éxito: Completar nivel
+                completeLevel();
+            }
+        });
+
+        // Función que maneja el estado de nivel completado
+        function completeLevel() {
+            isLevelCompleted = true;
+            const level = levels[currentLevelIndex];
+
+            // Sumar puntos
+            totalPoints += level.points;
+            xpPointsSpan.innerText = totalPoints;
+
+            // Habilitar botón Siguiente Nivel con estilo active
+            nextLvlBtn.disabled = false;
+            nextLvlBtn.classList.add('active');
+
+            // Feedback visual
+            theoryTextDiv.innerHTML += `<p class="mission-goal" style="color: #39ff14;">${level.successMessage}</p>`;
+        }
+
+        // Lógica para avanzar de nivel
+        nextLvlBtn.addEventListener('click', () => {
+            if (isLevelCompleted) {
+                if (currentLevelIndex < levels.length - 1) {
+                    currentLevelIndex++;
+                    loadLevel(currentLevelIndex);
+                } else {
+                    // Fin del juego o mensaje final
+                    theoryTextDiv.innerHTML = `<h2>¡HAS TERMINADO EL DEVQUEST!</h2><p>Puntuación Final: ${totalPoints}. Eres un programador web de élite.</p>`;
+                    nextLvlBtn.style.display = 'none'; // Ocultar botón
+                }
+            }
+        });
+
+        // Inicializar el primer nivel al cargar
+        loadLevel(currentLevelIndex);
+
+    </script>
 </body>
 </html>
