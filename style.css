@@ -1,0 +1,140 @@
+:root {
+    --bg-color: #f0f2f5;
+    --card-bg: #ffffff;
+    --primary-neon: #ff007a;
+    --secondary-neon: #00d4ff;
+    --accent-green: #39ff14;
+    --text-dark: #2d3436;
+    --arcade-font: 'Press Start 2P', cursive;
+    --main-font: 'Outfit', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    font-family: var(--main-font);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: var(--text-dark);
+}
+
+.arcade-container {
+    width: 95%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Header & Stats */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card-bg);
+    padding: 15px 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 0 #dfe6e9;
+}
+
+.level-badge {
+    font-family: var(--arcade-font);
+    font-size: 0.7rem;
+    color: var(--primary-neon);
+    margin-top: 5px;
+}
+
+.stat-box {
+    text-align: center;
+    background: #2d3436;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 12px;
+    border-bottom: 4px solid var(--primary-neon);
+}
+
+.stat-box .value {
+    display: block;
+    font-family: var(--arcade-font);
+    font-size: 1.2rem;
+    color: var(--accent-green);
+}
+
+/* Layout */
+.game-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr 300px;
+    gap: 20px;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 20px;
+    box-shadow: 0 8px 0 #dfe6e9;
+    transition: all 0.3s ease;
+}
+
+/* Editor */
+#code-editor {
+    width: 100%;
+    height: 300px;
+    background: #1e1e1e;
+    color: #dcdcdc;
+    border: none;
+    border-radius: 12px;
+    padding: 15px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    resize: none;
+    outline: none;
+}
+
+/* Botones Arcade */
+.arcade-btn {
+    width: 100%;
+    margin-top: 15px;
+    padding: 15px;
+    border: none;
+    border-radius: 15px;
+    font-family: var(--arcade-font);
+    font-size: 0.8rem;
+    cursor: pointer;
+    background: var(--secondary-neon);
+    color: white;
+    box-shadow: 0 6px 0 #00a8cc;
+}
+
+.arcade-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #00a8cc;
+}
+
+.next-btn {
+    background: var(--accent-green);
+    box-shadow: 0 6px 0 #2db30f;
+}
+
+.next-btn:disabled {
+    background: #b2bec3;
+    box-shadow: 0 6px 0 #636e72;
+    cursor: not-allowed;
+}
+
+/* Iframe Screen */
+.screen-frame {
+    background: #000;
+    border: 8px solid #2d3436;
+    border-radius: 15px;
+    overflow: hidden;
+    height: 300px;
+}
+
+#preview-window {
+    width: 100%;
+    height: 100%;
+    background: white;
+    border: none;
+}
