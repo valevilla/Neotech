@@ -128,6 +128,12 @@
             font-size: 2rem;
             border: 3px solid var(--neon-accent);
             box-shadow: 0 0 15px rgba(233, 69, 96, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .player-info h2 {
@@ -166,6 +172,17 @@
             color: #4ef037;
             text-shadow: 0 0 10px #4ef037;
             font-family: var(--font-arcade);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-value.pulse-stat {
+            animation: statPulse 0.6s ease;
+        }
+
+        @keyframes statPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
 
         /* === PANEL DE MISIÓN === */
@@ -202,6 +219,8 @@
             color: #4ef037;
             font-size: 0.9rem;
             font-weight: 500;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
         }
 
         .progress-section {
@@ -230,6 +249,105 @@
             width: 16%;
             transition: width 0.4s ease-out;
             box-shadow: 0 0 15px #4ef037;
+        }
+
+        /* === HINT SYSTEM === */
+        .hints-section {
+            background: rgba(78, 240, 55, 0.1);
+            border: 2px solid #4ef037;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .hints-section.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hint-label {
+            font-family: var(--font-arcade);
+            font-size: 0.6rem;
+            color: #4ef037;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .hint-text {
+            font-size: 0.85rem;
+            color: #a8ff7d;
+            line-height: 1.5;
+        }
+
+        .hint-button {
+            background: #4ef037;
+            color: #0f1423;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .hint-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(78, 240, 55, 0.5);
+        }
+
+        /* === REAL-TIME VALIDATION === */
+        .validation-indicator {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 0.85rem;
+        }
+
+        .validation-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ff6b6b;
+            transition: all 0.3s ease;
+        }
+
+        .validation-dot.checking {
+            background: #ffd700;
+            animation: blink 0.5s infinite;
+        }
+
+        .validation-dot.complete {
+            background: #4ef037;
+            box-shadow: 0 0 10px #4ef037;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .validation-text {
+            color: #c7e2f5;
+        }
+
+        .validation-text.complete {
+            color: #4ef037;
+            font-weight: 600;
         }
 
         /* === ÁREA PRINCIPAL === */
@@ -270,7 +388,7 @@
             height: 280px;
             background: var(--editor-bg);
             border-radius: 8px;
-            border: none;
+            border: 2px solid rgba(78, 240, 55, 0.2);
             padding: 12px;
             font-family: 'Courier New', Courier, monospace;
             font-size: 0.85rem;
@@ -279,6 +397,20 @@
             outline: none;
             box-sizing: border-box;
             line-height: 1.5;
+            transition: border-color 0.3s ease;
+        }
+
+        #code-editor:focus {
+            border-color: #4ef037;
+            box-shadow: 0 0 15px rgba(78, 240, 55, 0.2);
+        }
+
+        #code-editor.error {
+            border-color: #ff6b6b;
+        }
+
+        #code-editor.success {
+            border-color: #4ef037;
         }
 
         .preview-content {
@@ -335,6 +467,11 @@
             box-shadow: 0 6px 0 rgba(0, 100, 200, 0.5);
         }
 
+        #run-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         #next-lvl-btn {
             background: #7f8c8d;
             color: #b2bec3;
@@ -349,11 +486,18 @@
             opacity: 1;
             box-shadow: 0 4px 0 #922b3e;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            animation: buttonPulse 0.6s ease;
         }
 
         #next-lvl-btn.active:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 0 #922b3e;
+        }
+
+        @keyframes buttonPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         /* === MUNDOS Y NIVELES === */
@@ -395,9 +539,19 @@
             box-shadow: 0 10px 25px rgba(233, 69, 96, 0.3);
         }
 
+        .world-card.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .world-icon {
             font-size: 3rem;
             margin-bottom: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .world-card:hover .world-icon {
+            transform: scale(1.1) rotate(5deg);
         }
 
         .world-name {
@@ -442,6 +596,7 @@
             text-align: center;
             transition: all 0.3s ease;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
 
         .achievement-badge:hover {
@@ -450,15 +605,116 @@
             box-shadow: 0 5px 20px rgba(78, 240, 55, 0.3);
         }
 
+        .achievement-badge.locked {
+            opacity: 0.4;
+            filter: grayscale(100%);
+        }
+
+        .achievement-badge.unlocked {
+            border-color: #4ef037;
+            background: linear-gradient(135deg, rgba(78, 240, 55, 0.2), rgba(78, 240, 55, 0.1));
+        }
+
         .achievement-icon {
             font-size: 2rem;
             margin-bottom: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .achievement-badge.unlocked .achievement-icon {
+            animation: bounce 0.6s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         .achievement-name {
             font-size: 0.75rem;
             color: #4ef037;
             font-weight: 600;
+        }
+
+        .achievement-badge.locked .achievement-name {
+            color: #888;
+        }
+
+        /* === NOTIFICATIONS === */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #4ef037, #37f0b5);
+            color: #0f1423;
+            padding: 20px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 8px 25px rgba(78, 240, 55, 0.4);
+            animation: slideInNotif 0.5s ease, slideOutNotif 0.5s ease 2.5s forwards;
+            z-index: 1000;
+        }
+
+        .notification.warning {
+            background: linear-gradient(135deg, #ffd700, #ff9800);
+            color: #1a1a2e;
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
+            color: white;
+        }
+
+        @keyframes slideInNotif {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOutNotif {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+        }
+
+        /* === CELEBRATION ANIMATION === */
+        .celebration-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+            pointer-events: none;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #4ef037;
+            animation: confetti-fall 3s ease-in forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) rotate(360deg);
+            }
         }
 
         /* === RESPONSIVE === */
@@ -501,6 +757,12 @@
             .achievements-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
+
+            .notification {
+                right: 10px;
+                left: 10px;
+                width: auto;
+            }
         }
 
         /* === FOOTER === */
@@ -522,6 +784,25 @@
         .footer a:hover {
             text-decoration: underline;
         }
+
+        /* === DIFFICULTY INDICATOR === */
+        .difficulty-indicator {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .difficulty-star {
+            font-size: 0.8rem;
+            color: #ffd700;
+            opacity: 0.3;
+            transition: opacity 0.3s ease;
+        }
+
+        .difficulty-star.active {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -530,7 +811,7 @@
         <div class="header-hero">
             <h1>🎮 COCREHTML</h1>
             <div class="subtitle">Learn Web Development Playing</div>
-            <div class="tagline">✨ 25 LEVELS | 5 WORLDS | 10 ACHIEVEMENTS ✨</div>
+            <div class="tagline">✨ 50 LEVELS | 5 WORLDS | 15 ACHIEVEMENTS ✨</div>
         </div>
 
         <!-- PANEL DE PERFIL -->
@@ -548,12 +829,12 @@
                     <div class="stat-value" id="xp-points">0</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-label">LEVELS</div>
-                    <div class="stat-value">25</div>
+                    <div class="stat-label">STREAK</div>
+                    <div class="stat-value" id="streak-value">0</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-label">ACHIEVEMENTS</div>
-                    <div class="stat-value">10</div>
+                    <div class="stat-label">DIFFICULTY</div>
+                    <div class="stat-value" id="difficulty-value">Easy</div>
                 </div>
             </div>
         </div>
@@ -563,6 +844,12 @@
             <h2>📋 Misión Actual: Nivel <span id="mission-level">1</span></h2>
             <div id="theory-text">
                 <p>¡Bienvenido, Recluta! Todo gran sitio web comienza con un título. Escribe una etiqueta <span class="mission-goal">&lt;h1&gt;Hola Mundo&lt;/h1&gt;</span> para empezar.</p>
+            </div>
+            <div class="difficulty-indicator" id="difficulty-indicator"></div>
+            <div class="hints-section" id="hints-section">
+                <div class="hint-label">💡 PISTA DISPONIBLE</div>
+                <div class="hint-text" id="hint-text"></div>
+                <button class="hint-button" id="hint-btn">Ver Pista</button>
             </div>
             <div class="progress-section">
                 <div class="progress-label">PROGRESO GENERAL</div>
@@ -580,6 +867,10 @@
                     <span class="tab-title">📝 CODE EDITOR</span>
                 </div>
                 <textarea id="code-editor" spellcheck="false" placeholder="Escribe tu código HTML aquí..."></textarea>
+                <div class="validation-indicator" id="validation-indicator">
+                    <div class="validation-dot" id="validation-dot"></div>
+                    <div class="validation-text" id="validation-text">Esperando código...</div>
+                </div>
             </div>
 
             <!-- PREVIEW -->
@@ -602,122 +893,559 @@
         <!-- MUNDOS -->
         <div class="worlds-section">
             <h2 class="section-title">🌍 LOS 5 MUNDOS</h2>
-            <div class="worlds-grid">
-                <div class="world-card">
-                    <div class="world-icon">🟢</div>
-                    <div class="world-name">MUNDO 1</div>
-                    <div class="world-description">Fundamentos HTML</div>
-                    <div class="world-levels">Niveles 1-5</div>
-                </div>
-                <div class="world-card">
-                    <div class="world-icon">🎨</div>
-                    <div class="world-name">MUNDO 2</div>
-                    <div class="world-description">Estilos CSS</div>
-                    <div class="world-levels">Niveles 6-10</div>
-                </div>
-                <div class="world-card">
-                    <div class="world-icon">📐</div>
-                    <div class="world-name">MUNDO 3</div>
-                    <div class="world-description">Layouts Responsivos</div>
-                    <div class="world-levels">Niveles 11-15</div>
-                </div>
-                <div class="world-card">
-                    <div class="world-icon">🔧</div>
-                    <div class="world-name">MUNDO 4</div>
-                    <div class="world-description">Interactividad</div>
-                    <div class="world-levels">Niveles 16-20</div>
-                </div>
-                <div class="world-card">
-                    <div class="world-icon">🎓</div>
-                    <div class="world-name">MUNDO 5</div>
-                    <div class="world-description">Proyectos Finales</div>
-                    <div class="world-levels">Niveles 21-25</div>
-                </div>
-            </div>
+            <div class="worlds-grid" id="worlds-grid"></div>
         </div>
 
         <!-- LOGROS -->
         <div class="achievements-section">
             <h2 class="section-title">🏆 LOGROS DESBLOQUEABLES</h2>
-            <div class="achievements-grid">
-                <div class="achievement-badge">
-                    <div class="achievement-icon">����</div>
-                    <div class="achievement-name">Primer Paso</div>
-                </div>
-                <div class="achievement-badge">
-                    <div class="achievement-icon">🏆</div>
-                    <div class="achievement-name">Maestro HTML</div>
-                </div>
-                <div class="achievement-badge">
-                    <div class="achievement-icon">🎨</div>
-                    <div class="achievement-name">Artista CSS</div>
-                </div>
-                <div class="achievement-badge">
-                    <div class="achievement-icon">🥷</div>
-                    <div class="achievement-name">Ninja Responsivo</div>
-                </div>
-                <div class="achievement-badge">
-                    <div class="achievement-icon">🧙</div>
-                    <div class="achievement-name">Mago JavaScript</div>
-                </div>
-                <div class="achievement-badge">
-                    <div class="achievement-icon">👨‍💻</div>
-                    <div class="achievement-name">Dev Web</div>
-                </div>
-                <div class="achievement-badge">
-                    <div class="achievement-icon">⭐</div>
-                    <div class="achievement-name">Leyenda</div>
-                </div>
-                <div class="achievement-badge">
-                    <div class="achievement-icon">⚡</div>
-                    <div class="achievement-name">Velocista</div>
-                </div>
-                <div class="achievement-badge">
-                    <div class="achievement-icon">✨</div>
-                    <div class="achievement-name">Código Perfecto</div>
-                </div>
-                <div class="achievement-badge">
-                    <div class="achievement-icon">🎖️</div>
-                    <div class="achievement-name">Coleccionista</div>
-                </div>
-            </div>
+            <div class="achievements-grid" id="achievements-grid"></div>
         </div>
 
         <!-- FOOTER -->
         <div class="footer">
-            <p>🚀 CocreHTML v1.0 | Made with ❤️ by <a href="https://github.com/valevilla">Valevilla</a></p>
-            <p style="margin-top: 10px; font-size: 0.8rem;">📖 <a href="https://github.com/valevilla/CocreHTML">Ver en GitHub</a> | 📚 <a href="https://github.com/valevilla/CocreHTML/blob/main/README.md">Documentación</a></p>
+            <p>🚀 CocreHTML v2.0 | Made with ❤️ by <a href="https://github.com/valevilla">Valevilla</a></p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">📖 <a href="https://github.com/valevilla/CocreHTML">Ver en GitHub</a> | 🎮 ¡Gracias por jugar!</p>
         </div>
     </div>
 
     <script>
-        // Configuración de niveles
+        // ============================================================
+        // CONFIGURACIÓN DE NIVELES MEJORADA (50 niveles)
+        // ============================================================
         const levels = [
+            // MUNDO 1: FUNDAMENTOS HTML (Niveles 1-10)
             {
                 id: 1,
+                world: 1,
                 title: "Hola Mundo",
-                theory: "¡Bienvenido, Recluta! Todo gran sitio web comienza con un título. Escribe una etiqueta <h1>Hola Mundo</h1> para empezar.",
+                theory: "¡Bienvenido, Recluta! Todo gran sitio web comienza con un título. Escribe una etiqueta",
                 goal: "<h1>Hola Mundo</h1>",
-                xp: 100
+                hint: "Usa las etiquetas <h1> y </h1> para crear un encabezado",
+                xp: 100,
+                difficulty: 1
             },
             {
                 id: 2,
+                world: 1,
                 title: "Mi Primer Párrafo",
-                theory: "¡Excelente! Ahora vamos a agregar un párrafo. Usa la etiqueta <p>Este es mi primer sitio.</p>",
+                theory: "¡Excelente! Ahora vamos a agregar un párrafo. Usa la etiqueta",
                 goal: "<p>Este es mi primer sitio.</p>",
-                xp: 125
+                hint: "Usa las etiquetas <p> y </p> para crear un párrafo",
+                xp: 125,
+                difficulty: 1
             },
             {
                 id: 3,
-                title: "Dándole Color",
-                theory: "¡Increíble! Ahora vamos a darle estilo. Agrega color rojo al título usando <style>h1 { color: red; }</style>",
+                world: 1,
+                title: "Estructura Básica",
+                theory: "Ahora aprenderás la estructura HTML completa.",
+                goal: "<!DOCTYPE html>",
+                hint: "Comienza con <!DOCTYPE html> para indicar que es un documento HTML5",
+                xp: 150,
+                difficulty: 1
+            },
+            {
+                id: 4,
+                world: 1,
+                title: "Etiqueta HTML",
+                theory: "Agrega la etiqueta <html> principal.",
+                goal: "<html></html>",
+                hint: "Envuelve tu contenido con <html> y </html>",
+                xp: 150,
+                difficulty: 2
+            },
+            {
+                id: 5,
+                world: 1,
+                title: "Encabezado",
+                theory: "Agrega una sección <head> con un título.",
+                goal: "<head><title>Mi Sitio</title></head>",
+                hint: "Usa <head> para la información y <title> para el nombre del sitio",
+                xp: 175,
+                difficulty: 2
+            },
+            {
+                id: 6,
+                world: 1,
+                title: "Cuerpo del Sitio",
+                theory: "Ahora agrega un <body> con contenido.",
+                goal: "<body><h1>Contenido</h1></body>",
+                hint: "El contenido visible va dentro de <body>",
+                xp: 175,
+                difficulty: 2
+            },
+            {
+                id: 7,
+                world: 1,
+                title: "Listas HTML",
+                theory: "Crea una lista sin orden.",
+                goal: "<ul><li>Item 1</li></ul>",
+                hint: "Usa <ul> para listas sin orden y <li> para cada elemento",
+                xp: 200,
+                difficulty: 2
+            },
+            {
+                id: 8,
+                world: 1,
+                title: "Enlaces",
+                theory: "Crea tu primer enlace.",
+                goal: "<a href=\"https://google.com\">Link</a>",
+                hint: "Usa <a href=\"URL\">Texto</a> para crear enlaces",
+                xp: 200,
+                difficulty: 2
+            },
+            {
+                id: 9,
+                world: 1,
+                title: "Imágenes",
+                theory: "Inserta una imagen.",
+                goal: "<img src=\"image.jpg\" alt=\"Descripción\">",
+                hint: "Usa <img src=\"URL\" alt=\"texto\"> para insertar imágenes",
+                xp: 225,
+                difficulty: 3
+            },
+            {
+                id: 10,
+                world: 1,
+                title: "Estructura Completa",
+                theory: "Combina todo lo aprendido en una estructura HTML completa.",
+                goal: "<!DOCTYPE html><html><head><title>",
+                hint: "Estructura completa: DOCTYPE, html, head, body",
+                xp: 250,
+                difficulty: 3
+            },
+            // MUNDO 2: ESTILOS CSS (Niveles 11-20)
+            {
+                id: 11,
+                world: 2,
+                title: "Color en CSS",
+                theory: "Ahora aprenderás CSS. Cambia el color de un elemento.",
                 goal: "color: red",
-                xp: 150
+                hint: "Usa 'color: red;' para cambiar el color del texto",
+                xp: 275,
+                difficulty: 2
+            },
+            {
+                id: 12,
+                world: 2,
+                title: "Fondo de Color",
+                theory: "Cambia el color de fondo.",
+                goal: "background-color: blue",
+                hint: "Usa 'background-color: blue;' para el fondo",
+                xp: 275,
+                difficulty: 2
+            },
+            {
+                id: 13,
+                world: 2,
+                title: "Tamaño de Fuente",
+                theory: "Modifica el tamaño del texto.",
+                goal: "font-size: 24px",
+                hint: "Usa 'font-size: 24px;' para aumentar el tamaño",
+                xp: 300,
+                difficulty: 2
+            },
+            {
+                id: 14,
+                world: 2,
+                title: "Ancho y Alto",
+                theory: "Define dimensiones con width y height.",
+                goal: "width: 100px",
+                hint: "Usa 'width: 100px;' para el ancho",
+                xp: 300,
+                difficulty: 2
+            },
+            {
+                id: 15,
+                world: 2,
+                title: "Bordes",
+                theory: "Agrega un borde a un elemento.",
+                goal: "border: 2px solid",
+                hint: "Usa 'border: 2px solid color;'",
+                xp: 325,
+                difficulty: 3
+            },
+            {
+                id: 16,
+                world: 2,
+                title: "Relleno Interior",
+                theory: "Agrega espacio dentro del elemento.",
+                goal: "padding: 10px",
+                hint: "Usa 'padding: 10px;' para espacio interior",
+                xp: 325,
+                difficulty: 3
+            },
+            {
+                id: 17,
+                world: 2,
+                title: "Margen Exterior",
+                theory: "Agrega espacio fuera del elemento.",
+                goal: "margin: 10px",
+                hint: "Usa 'margin: 10px;' para espacio exterior",
+                xp: 350,
+                difficulty: 3
+            },
+            {
+                id: 18,
+                world: 2,
+                title: "Esquinas Redondeadas",
+                theory: "Redondea las esquinas.",
+                goal: "border-radius: 10px",
+                hint: "Usa 'border-radius: 10px;'",
+                xp: 350,
+                difficulty: 3
+            },
+            {
+                id: 19,
+                world: 2,
+                title: "Sombra de Texto",
+                theory: "Agrega sombra al texto.",
+                goal: "text-shadow: 2px 2px",
+                hint: "Usa 'text-shadow: 2px 2px 4px gray;'",
+                xp: 375,
+                difficulty: 3
+            },
+            {
+                id: 20,
+                world: 2,
+                title: "Selector de Clase",
+                theory: "Usa clases para estilos.",
+                goal: ".mi-clase { color:",
+                hint: "Crea una clase con '.nombre { ... }'",
+                xp: 400,
+                difficulty: 3
+            },
+            // MUNDO 3: LAYOUTS RESPONSIVOS (Niveles 21-30)
+            {
+                id: 21,
+                world: 3,
+                title: "Display Flex",
+                theory: "Aprende Flexbox para layouts modernos.",
+                goal: "display: flex",
+                hint: "Usa 'display: flex;' para layouts flexibles",
+                xp: 425,
+                difficulty: 3
+            },
+            {
+                id: 22,
+                world: 3,
+                title: "Justificar Contenido",
+                theory: "Alinea elementos horizontalmente.",
+                goal: "justify-content: center",
+                hint: "Usa 'justify-content: center;'",
+                xp: 425,
+                difficulty: 3
+            },
+            {
+                id: 23,
+                world: 3,
+                title: "Alinear Elementos",
+                theory: "Alinea elementos verticalmente.",
+                goal: "align-items: center",
+                hint: "Usa 'align-items: center;'",
+                xp: 450,
+                difficulty: 3
+            },
+            {
+                id: 24,
+                world: 3,
+                title: "Grid Display",
+                theory: "Aprende CSS Grid.",
+                goal: "display: grid",
+                hint: "Usa 'display: grid;' para layouts de cuadrícula",
+                xp: 450,
+                difficulty: 4
+            },
+            {
+                id: 25,
+                world: 3,
+                title: "Columnas de Grid",
+                theory: "Define columnas en grid.",
+                goal: "grid-template-columns:",
+                hint: "Usa 'grid-template-columns: 1fr 1fr;'",
+                xp: 475,
+                difficulty: 4
+            },
+            {
+                id: 26,
+                world: 3,
+                title: "Media Queries",
+                theory: "Haz diseño responsivo.",
+                goal: "@media (max-width:",
+                hint: "Usa '@media (max-width: 768px) { ... }'",
+                xp: 475,
+                difficulty: 4
+            },
+            {
+                id: 27,
+                world: 3,
+                title: "Posicionamiento",
+                theory: "Controla la posición.",
+                goal: "position: absolute",
+                hint: "Usa 'position: absolute;' o 'relative'",
+                xp: 500,
+                difficulty: 4
+            },
+            {
+                id: 28,
+                world: 3,
+                title: "Overflow",
+                theory: "Controla el desbordamiento.",
+                goal: "overflow: hidden",
+                hint: "Usa 'overflow: hidden;' o 'scroll'",
+                xp: 500,
+                difficulty: 4
+            },
+            {
+                id: 29,
+                world: 3,
+                title: "Z-Index",
+                theory: "Controla la profundidad.",
+                goal: "z-index: 10",
+                hint: "Usa 'z-index: 10;' para controlar capas",
+                xp: 525,
+                difficulty: 4
+            },
+            {
+                id: 30,
+                world: 3,
+                title: "Transformaciones",
+                theory: "Transforma elementos.",
+                goal: "transform: rotate",
+                hint: "Usa 'transform: rotate(45deg);'",
+                xp: 550,
+                difficulty: 4
+            },
+            // MUNDO 4: INTERACTIVIDAD (Niveles 31-40)
+            {
+                id: 31,
+                world: 4,
+                title: "Hover Effects",
+                theory: "Agrega efectos al pasar el ratón.",
+                goal: ":hover { transform",
+                hint: "Usa ':hover' para efectos interactivos",
+                xp: 575,
+                difficulty: 4
+            },
+            {
+                id: 32,
+                world: 4,
+                title: "Transiciones CSS",
+                theory: "Anima cambios suavemente.",
+                goal: "transition: all",
+                hint: "Usa 'transition: all 0.3s ease;'",
+                xp: 575,
+                difficulty: 4
+            },
+            {
+                id: 33,
+                world: 4,
+                title: "Animaciones Keyframes",
+                theory: "Crea animaciones complejas.",
+                goal: "@keyframes",
+                hint: "Define '@keyframes nombreAnim { ... }'",
+                xp: 600,
+                difficulty: 5
+            },
+            {
+                id: 34,
+                world: 4,
+                title: "Formularios HTML",
+                theory: "Crea formularios interactivos.",
+                goal: "<form><input",
+                hint: "Usa <form> e <input type=\"text\">",
+                xp: 600,
+                difficulty: 5
+            },
+            {
+                id: 35,
+                world: 4,
+                title: "Inputs Validados",
+                theory: "Valida inputs con HTML5.",
+                goal: "type=\"email\"",
+                hint: "Usa type=\"email\", type=\"number\", etc.",
+                xp: 625,
+                difficulty: 5
+            },
+            {
+                id: 36,
+                world: 4,
+                title: "Botones Interactivos",
+                theory: "Crea botones con estilos.",
+                goal: "<button onclick",
+                hint: "Usa <button onclick=\"funcion()\">",
+                xp: 625,
+                difficulty: 5
+            },
+            {
+                id: 37,
+                world: 4,
+                title: "JavaScript Básico",
+                theory: "Agrega JavaScript para interacción.",
+                goal: "<script>",
+                hint: "Escribe código entre <script> y </script>",
+                xp: 650,
+                difficulty: 5
+            },
+            {
+                id: 38,
+                world: 4,
+                title: "DOM Manipulation",
+                theory: "Modifica elementos con JS.",
+                goal: "document.getElementById",
+                hint: "Usa document.getElementById('id').textContent",
+                xp: 650,
+                difficulty: 5
+            },
+            {
+                id: 39,
+                world: 4,
+                title: "Event Listeners",
+                theory: "Escucha eventos del usuario.",
+                goal: "addEventListener",
+                hint: "Usa element.addEventListener('click', func)",
+                xp: 675,
+                difficulty: 5
+            },
+            {
+                id: 40,
+                world: 4,
+                title: "Efectos Dinámicos",
+                theory: "Combina CSS y JS.",
+                goal: "classList.add",
+                hint: "Usa classList.add/remove para cambiar clases",
+                xp: 700,
+                difficulty: 5
+            },
+            // MUNDO 5: PROYECTOS FINALES (Niveles 41-50)
+            {
+                id: 41,
+                world: 5,
+                title: "Tarjeta de Perfil",
+                theory: "Crea una tarjeta de perfil.",
+                goal: "class=\"card\"",
+                hint: "Combina HTML, CSS y diseño responsivo",
+                xp: 725,
+                difficulty: 5
+            },
+            {
+                id: 42,
+                world: 5,
+                title: "Galería de Imágenes",
+                theory: "Crea una galería interactiva.",
+                goal: "grid",
+                hint: "Usa CSS Grid para la galería",
+                xp: 725,
+                difficulty: 5
+            },
+            {
+                id: 43,
+                world: 5,
+                title: "Navegación Principal",
+                theory: "Diseña una barra de navegación.",
+                goal: "<nav>",
+                hint: "Usa <nav> con <ul> y <li>",
+                xp: 750,
+                difficulty: 5
+            },
+            {
+                id: 44,
+                world: 5,
+                title: "Footer Profesional",
+                theory: "Crea un footer.",
+                goal: "<footer>",
+                hint: "Usa <footer> con información",
+                xp: 750,
+                difficulty: 5
+            },
+            {
+                id: 45,
+                world: 5,
+                title: "Formulario Completo",
+                theory: "Diseña un formulario funcional.",
+                goal: "<form>",
+                hint: "Incluye validación y estilos",
+                xp: 775,
+                difficulty: 5
+            },
+            {
+                id: 46,
+                world: 5,
+                title: "Carrusel de Imágenes",
+                theory: "Crea un carrusel con JS.",
+                goal: "setInterval",
+                hint: "Usa setInterval para cambiar imágenes",
+                xp: 775,
+                difficulty: 5
+            },
+            {
+                id: 47,
+                world: 5,
+                title: "Modal Pop-up",
+                theory: "Crea un modal emergente.",
+                goal: "display: none",
+                hint: "Cambia display de none a block",
+                xp: 800,
+                difficulty: 5
+            },
+            {
+                id: 48,
+                world: 5,
+                title: "Página Responsiva",
+                theory: "Diseña para móvil y desktop.",
+                goal: "@media",
+                hint: "Usa media queries completas",
+                xp: 800,
+                difficulty: 5
+            },
+            {
+                id: 49,
+                world: 5,
+                title: "Blog Simple",
+                theory: "Crea un blog con artículos.",
+                goal: "<article>",
+                hint: "Usa <article> y <section>",
+                xp: 825,
+                difficulty: 5
+            },
+            {
+                id: 50,
+                world: 5,
+                title: "Maestro Web Developer",
+                theory: "¡Proyecto final! Combina todo.",
+                goal: "<!DOCTYPE html>",
+                hint: "Crea una página con todo lo aprendido",
+                xp: 1000,
+                difficulty: 5
             }
         ];
 
+        // Logros desbloqueables
+        const achievements = [
+            { id: 1, name: "Primer Paso", icon: "👣", requirement: "level_1" },
+            { id: 2, name: "Maestro HTML", icon: "🏆", requirement: "level_10" },
+            { id: 3, name: "Artista CSS", icon: "🎨", requirement: "level_20" },
+            { id: 4, name: "Ninja Responsivo", icon: "🥷", requirement: "level_30" },
+            { id: 5, name: "Mago JavaScript", icon: "🧙", requirement: "level_40" },
+            { id: 6, name: "Dev Web Profesional", icon: "👨‍💻", requirement: "level_50" },
+            { id: 7, name: "Velocista", icon: "⚡", requirement: "streak_10" },
+            { id: 8, name: "Coleccionista", icon: "🎖️", requirement: "achievements_5" },
+            { id: 9, name: "Perfeccionista", icon: "✨", requirement: "perfect_codes_5" },
+            { id: 10, name: "Streaker", icon: "🔥", requirement: "streak_25" },
+            { id: 11, name: "Legendario", icon: "⭐", requirement: "level_50_perfect" },
+            { id: 12, name: "Experto en XP", icon: "💎", requirement: "xp_10000" },
+            { id: 13, name: "Explorador", icon: "🗺️", requirement: "all_worlds" },
+            { id: 14, name: "Investigador", icon: "🔬", requirement: "hints_20" },
+            { id: 15, name: "Campeón", icon: "🏅", requirement: "all_levels" }
+        ];
+
+        // Variables de estado del juego
         let currentLevelIndex = parseInt(localStorage.getItem('userLevel')) || 0;
         let totalXP = parseInt(localStorage.getItem('userXP')) || 0;
+        let streak = parseInt(localStorage.getItem('userStreak')) || 0;
+        let unlockedAchievements = JSON.parse(localStorage.getItem('achievements')) || [];
+        let hintUsed = false;
 
         // Elementos DOM
         const editor = document.getElementById('code-editor');
@@ -725,13 +1453,27 @@
         const nextBtn = document.getElementById('next-lvl-btn');
         const theoryText = document.getElementById('theory-text');
         const xpDisplay = document.getElementById('xp-points');
+        const streakDisplay = document.getElementById('streak-value');
+        const difficultyDisplay = document.getElementById('difficulty-value');
         const levelDisplay = document.getElementById('current-level-num');
         const missionLevel = document.getElementById('mission-level');
         const progressFill = document.getElementById('progress-fill');
+        const validationDot = document.getElementById('validation-dot');
+        const validationText = document.getElementById('validation-text');
+        const hintsSection = document.getElementById('hints-section');
+        const hintBtn = document.getElementById('hint-btn');
+        const hintText = document.getElementById('hint-text');
+
+        // ============================================================
+        // FUNCIONES PRINCIPALES
+        // ============================================================
 
         function initGame() {
             loadLevel(currentLevelIndex);
             updateUI();
+            renderWorlds();
+            renderAchievements();
+            setupEventListeners();
         }
 
         function loadLevel(index) {
@@ -746,6 +1488,10 @@
             missionLevel.innerText = level.id;
             nextBtn.disabled = true;
             nextBtn.classList.remove('active');
+            hintUsed = false;
+
+            // Mostrar dificultad
+            updateDifficultyDisplay(level.difficulty);
 
             // Calcular porcentaje de progreso
             const progress = ((index + 1) / levels.length) * 100;
@@ -753,17 +1499,90 @@
 
             // Limpiar editor y preview
             editor.value = "";
+            editor.classList.remove('success', 'error');
+            validationDot.className = 'validation-dot';
+            validationText.textContent = 'Esperando código...';
+            validationText.className = 'validation-text';
+
+            // Limpiar preview
             const previewDoc = document.getElementById('preview-window').contentWindow.document;
             previewDoc.open();
             previewDoc.write("");
             previewDoc.close();
+
+            // Mostrar pista
+            hintsSection.classList.remove('active');
+            hintText.textContent = level.hint;
         }
 
         function updateUI() {
             xpDisplay.innerText = totalXP;
+            streakDisplay.innerText = streak;
         }
 
-        runBtn.addEventListener('click', () => {
+        function updateDifficultyDisplay(difficulty) {
+            const difficultyNames = ['', 'Very Easy', 'Easy', 'Medium', 'Hard', 'Very Hard'];
+            difficultyDisplay.textContent = difficultyNames[difficulty] || 'Unknown';
+            
+            const diffIndicator = document.getElementById('difficulty-indicator');
+            diffIndicator.innerHTML = '';
+            for (let i = 0; i < 5; i++) {
+                const star = document.createElement('div');
+                star.className = 'difficulty-star' + (i < difficulty ? ' active' : '');
+                star.textContent = '★';
+                diffIndicator.appendChild(star);
+            }
+        }
+
+        // ============================================================
+        // VALIDACIÓN EN TIEMPO REAL
+        // ============================================================
+
+        editor.addEventListener('input', () => {
+            const code = editor.value;
+            const currentGoal = levels[currentLevelIndex].goal;
+            const normalizedCode = code.toLowerCase().replace(/\s+/g, '');
+            const normalizedGoal = currentGoal.toLowerCase().replace(/\s+/g, '');
+
+            if (code.length === 0) {
+                validationDot.className = 'validation-dot';
+                validationText.textContent = 'Esperando código...';
+                validationText.className = 'validation-text';
+                editor.classList.remove('success', 'error');
+                return;
+            }
+
+            if (normalizedCode.includes(normalizedGoal)) {
+                validationDot.className = 'validation-dot complete';
+                validationText.textContent = '✓ ¡Objetivo completado! Presiona RUN';
+                validationText.className = 'validation-text complete';
+                editor.classList.add('success');
+                editor.classList.remove('error');
+            } else {
+                validationDot.className = 'validation-dot checking';
+                validationText.textContent = '⚡ Escribiendo...';
+                validationText.className = 'validation-text';
+                editor.classList.remove('success');
+                if (code.length > currentGoal.length) {
+                    editor.classList.add('error');
+                } else {
+                    editor.classList.remove('error');
+                }
+            }
+        });
+
+        // ============================================================
+        // SISTEMA DE EVENTOS
+        // ============================================================
+
+        function setupEventListeners() {
+            runBtn.addEventListener('click', runCode);
+            nextBtn.addEventListener('click', nextLevel);
+            hintBtn.addEventListener('click', showHint);
+        }
+
+        function runCode() {
+            runBtn.disabled = true;
             const code = editor.value;
             const preview = document.getElementById('preview-window').contentWindow.document;
 
@@ -777,38 +1596,199 @@
             const normalizedCode = code.toLowerCase().replace(/\s+/g, '');
             const normalizedGoal = currentGoal.toLowerCase().replace(/\s+/g, '');
 
-            if (normalizedCode.includes(normalizedGoal)) {
-                completeLevel();
-            }
-        });
+            setTimeout(() => {
+                if (normalizedCode.includes(normalizedGoal)) {
+                    completeLevel();
+                } else {
+                    showNotification('Código incorrecto. Intenta de nuevo', 'error');
+                }
+                runBtn.disabled = false;
+            }, 300);
+        }
 
         function completeLevel() {
             if (nextBtn.disabled) {
-                totalXP += levels[currentLevelIndex].xp;
+                const level = levels[currentLevelIndex];
+                const xpGain = level.xp;
+                totalXP += xpGain;
+                streak++;
                 nextBtn.disabled = false;
                 nextBtn.classList.add('active');
                 saveProgress();
                 updateUI();
-                alert("¡Nivel Completado! + " + levels[currentLevelIndex].xp + " XP");
+                
+                // Celebración
+                playSound('success');
+                createCelebration();
+                showNotification(`¡Nivel ${level.id} Completado! +${xpGain} XP 🎉`, 'success');
+                checkAchievements();
             }
         }
 
-        nextBtn.addEventListener('click', () => {
+        function nextLevel() {
             if (currentLevelIndex < levels.length - 1) {
                 currentLevelIndex++;
                 loadLevel(currentLevelIndex);
                 saveProgress();
             } else {
-                alert("¡Has terminado todos los niveles actuales! Eres un Maestro Web. 🎉");
+                showNotification("¡Has terminado todos los niveles! ¡Eres un Maestro Web! 🚀", 'success');
             }
-        });
+        }
+
+        function showHint() {
+            hintsSection.classList.add('active');
+            hintUsed = true;
+            playSound('hint');
+        }
+
+        // ============================================================
+        // NOTIFICACIONES Y EFECTOS
+        // ============================================================
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        function createCelebration() {
+            const container = document.createElement('div');
+            container.className = 'celebration-container';
+            document.body.appendChild(container);
+
+            for (let i = 0; i < 30; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                const x = (Math.random() - 0.5) * 400;
+                const y = (Math.random() - 0.5) * 400;
+                const colors = ['#4ef037', '#e94560', '#00bcd4', '#ffd700', '#37f0b5'];
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.setProperty('--tx', x + 'px');
+                confetti.style.setProperty('--ty', y + 'px');
+                container.appendChild(confetti);
+            }
+
+            setTimeout(() => container.remove(), 3000);
+        }
+
+        function playSound(type) {
+            // Crear sonidos simples con Web Audio API
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscilador = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscilador.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            const now = audioContext.currentTime;
+            if (type === 'success') {
+                oscilador.frequency.setValueAtTime(523.25, now);
+                oscilador.frequency.setValueAtTime(659.25, now + 0.1);
+                gainNode.gain.setValueAtTime(0.3, now);
+                gainNode.gain.linearRampToValueAtTime(0, now + 0.2);
+                oscilador.start(now);
+                oscilador.stop(now + 0.2);
+            } else if (type === 'hint') {
+                oscilador.frequency.setValueAtTime(440, now);
+                gainNode.gain.setValueAtTime(0.2, now);
+                gainNode.gain.linearRampToValueAtTime(0, now + 0.1);
+                oscilador.start(now);
+                oscilador.stop(now + 0.1);
+            }
+        }
+
+        // ============================================================
+        // MUNDOS Y LOGROS
+        // ============================================================
+
+        function renderWorlds() {
+            const worldsGrid = document.getElementById('worlds-grid');
+            worldsGrid.innerHTML = '';
+            const worldData = [
+                { icon: '🟢', name: 'Fundamentos', desc: 'Aprende HTML básico', levels: '1-10' },
+                { icon: '🎨', name: 'Estilos CSS', desc: 'Domina CSS', levels: '11-20' },
+                { icon: '📐', name: 'Layouts', desc: 'Diseños responsivos', levels: '21-30' },
+                { icon: '⚙️', name: 'Interactividad', desc: 'JavaScript y eventos', levels: '31-40' },
+                { icon: '🎓', name: 'Proyectos', desc: 'Crea proyectos reales', levels: '41-50' }
+            ];
+
+            worldData.forEach((world, idx) => {
+                const card = document.createElement('div');
+                card.className = 'world-card';
+                if (currentLevelIndex < (idx * 10)) {
+                    card.classList.add('locked');
+                }
+                card.innerHTML = `
+                    <div class="world-icon">${world.icon}</div>
+                    <div class="world-name">MUNDO ${idx + 1}</div>
+                    <div class="world-description">${world.desc}</div>
+                    <div class="world-levels">${world.levels}</div>
+                `;
+                worldsGrid.appendChild(card);
+            });
+        }
+
+        function renderAchievements() {
+            const achievementsGrid = document.getElementById('achievements-grid');
+            achievementsGrid.innerHTML = '';
+
+            achievements.forEach(ach => {
+                const badge = document.createElement('div');
+                badge.className = 'achievement-badge';
+                const isUnlocked = unlockedAchievements.includes(ach.id);
+                if (isUnlocked) {
+                    badge.classList.add('unlocked');
+                } else {
+                    badge.classList.add('locked');
+                }
+                badge.innerHTML = `
+                    <div class="achievement-icon">${ach.icon}</div>
+                    <div class="achievement-name">${ach.name}</div>
+                `;
+                achievementsGrid.appendChild(badge);
+            });
+        }
+
+        function checkAchievements() {
+            const level = levels[currentLevelIndex];
+            achievements.forEach(ach => {
+                if (unlockedAchievements.includes(ach.id)) return;
+
+                let shouldUnlock = false;
+                if (ach.requirement === `level_${level.id}`) shouldUnlock = true;
+                if (ach.requirement === 'streak_10' && streak >= 10) shouldUnlock = true;
+                if (ach.requirement === 'streak_25' && streak >= 25) shouldUnlock = true;
+                if (ach.requirement === 'all_worlds' && currentLevelIndex >= 49) shouldUnlock = true;
+                if (ach.requirement === 'all_levels' && currentLevelIndex >= levels.length - 1) shouldUnlock = true;
+                if (ach.requirement === 'level_50' && level.id === 50) shouldUnlock = true;
+
+                if (shouldUnlock) {
+                    unlockedAchievements.push(ach.id);
+                    showNotification(`🏆 ¡Logro desbloqueado: ${ach.name}!`, 'success');
+                    createCelebration();
+                    localStorage.setItem('achievements', JSON.stringify(unlockedAchievements));
+                    renderAchievements();
+                }
+            });
+        }
+
+        // ============================================================
+        // PERSISTENCIA
+        // ============================================================
 
         function saveProgress() {
             localStorage.setItem('userLevel', currentLevelIndex);
             localStorage.setItem('userXP', totalXP);
+            localStorage.setItem('userStreak', streak);
         }
 
-        // Inicializar
+        // ============================================================
+        // INICIALIZAR JUEGO
+        // ============================================================
+
         initGame();
     </script>
 </body>
